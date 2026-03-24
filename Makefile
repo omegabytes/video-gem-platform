@@ -4,6 +4,8 @@
 #   make setup      # one-time: Arduino CLI, RP2040 core, libraries
 #   make compile    # build the sketch
 #   make test       # run unit tests
+#   make coverage   # line coverage for VideoGem/ (needs gcovr: make install-gcovr)
+#   make coverage-html   # HTML report → test/coverage.html
 #   make lint       # arduino-lint + cppcheck (needs: make install-tools)
 #   make list-boards
 #   ARDUINO_PORT=/dev/cu.usbmodem101 make upload
@@ -17,7 +19,8 @@ DEFAULT_PROGS := $(CURDIR)/programs/default
 FQBN        := rp2040:rp2040:adafruit_feather_dvi
 RP2040_URL  := https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-.PHONY: setup install-arduino-cli setup-arduino install-gcovr merge compile test coverage
+.PHONY: setup install-arduino-cli setup-arduino install-gcovr merge compile test \
+	coverage coverage-all coverage-html coverage-html-all coverage-xml
 .PHONY: upload list-boards monitor
 .PHONY: list-video-devices preview
 .PHONY: install-tools arduino-lint cppcheck lint
@@ -66,6 +69,18 @@ test:
 
 coverage:
 	$(MAKE) -C test coverage
+
+coverage-all:
+	$(MAKE) -C test coverage-all
+
+coverage-html:
+	$(MAKE) -C test coverage-html
+
+coverage-html-all:
+	$(MAKE) -C test coverage-html-all
+
+coverage-xml:
+	$(MAKE) -C test coverage-xml
 
 # ─── Upload & monitor ───────────────────────────────────────────────────
 upload:

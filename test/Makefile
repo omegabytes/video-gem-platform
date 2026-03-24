@@ -1,8 +1,10 @@
-# Platform core tests — run against platform/VideoGem (no merge)
+# Platform core tests — run against VideoGem/ (no merge)
+#
+# Coverage uses gcc --coverage + gcovr (pip install gcovr; root Makefile: install-gcovr).
+# Aligned with video-gem parent repo: text + HTML + optional Cobertura XML.
 
 CXX        := g++
 SKETCH_DIR := $(CURDIR)/../VideoGem
-# Enable gcov coverage info for host-based tests
 COVERAGE_FLAGS := --coverage
 CXXFLAGS   := -std=c++17 -Wall -Wextra -Wpedantic -g -I mocks -I $(SKETCH_DIR) -DUNIT_TEST $(COVERAGE_FLAGS)
 LDFLAGS    := -lm $(COVERAGE_FLAGS)
@@ -10,7 +12,17 @@ LDFLAGS    := -lm $(COVERAGE_FLAGS)
 SRCS := $(wildcard test_core_*.cpp)
 BINS := $(patsubst %.cpp,build/%,$(SRCS))
 
-.PHONY: all clean coverage coverage-html
+# gcovr: repo root (parent of test/)
+GCOVR       := gcovr
+GCOVR_ROOT  := $(abspath ..)
+GCOVR_BASE  := -r $(GCOVR_ROOT)
+# Exclude mock headers (regex must match paths like test/mocks/…)
+GCOVR_EX    := --exclude 'mocks'
+# Optional: totals only for merged VideoGem firmware (excludes test/*.cpp harness)
+GCOVR_FW    := --filter '.*/VideoGem/.*'
+
+.PHONY: all clean \
+	coverage coverage-all coverage-html coverage-html-all coverage-xml
 
 all: $(BINS)
 	@pass=0; fail=0; \
@@ -29,10 +41,25 @@ build:
 
 clean:
 	rm -rf build
+	rm -f coverage.html coverage-all.html coverage.xml
 
-# Coverage reports (requires gcovr to be installed)
+# Line coverage, VideoGem/*.ino only (primary metric for firmware)
 coverage: all
-	@gcovr -r .. --exclude '.*/test/.*' --exclude '.*/mocks/.*'
+	@$(GCOVR) $(GCOVR_BASE) $(GCOVR_EX) $(GCOVR_FW)
+
+# Include test harness sources in the report
+coverage-all: all
+	@$(GCOVR) $(GCOVR_BASE) $(GCOVR_EX)
 
 coverage-html: all
-	@gcovr -r .. --exclude '.*/test/.*' --exclude '.*/mocks/.*' --html --html-details -o coverage.html
+	@$(GCOVR) $(GCOVR_BASE) $(GCOVR_EX) $(GCOVR_FW) --html --html-details -o coverage.html
+	@echo "Wrote test/coverage.html"
+
+coverage-html-all: all
+	@$(GCOVR) $(GCOVR_BASE) $(GCOVR_EX) --html --html-details -o coverage-all.html
+	@echo "Wrote test/coverage-all.html"
+
+# CI / Cobertura (e.g. GitHub Actions, Codecov)
+coverage-xml: all
+	@$(GCOVR) $(GCOVR_BASE) $(GCOVR_EX) $(GCOVR_FW) --xml -o coverage.xml
+	@echo "Wrote test/coverage.xml"

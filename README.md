@@ -20,9 +20,10 @@ Ships with **default programs** in `programs/default/` (Basic Shapes, Symmetry, 
 ## Getting Started
 
 ```bash
-make setup      # one-time: Arduino CLI, RP2040 core, libraries
+make setup      # one-time: Arduino CLI, RP2040 core, libraries, gcovr (for coverage)
 make compile    # build the sketch
 make test       # run unit tests
+make coverage   # line coverage for VideoGem/ (after tests; needs gcovr)
 make list-boards
 ARDUINO_PORT=/dev/cu.usbmodem101 make upload
 ARDUINO_PORT=/dev/cu.usbmodem101 make monitor
@@ -35,6 +36,11 @@ ARDUINO_PORT=/dev/cu.usbmodem101 make monitor
 | `make setup` | One-time: Arduino CLI, RP2040 core, libraries |
 | `make compile` | Build the sketch |
 | `make test` | Run unit tests |
+| `make coverage` | Line coverage for `VideoGem/*.ino` (gcc `--coverage` + [gcovr](https://gcovr.com/en/stable/)) |
+| `make coverage-all` | Same report, includes `test/*.cpp` harness |
+| `make coverage-html` | Detailed HTML report → `test/coverage.html` |
+| `make coverage-html-all` | HTML including test sources → `test/coverage-all.html` |
+| `make coverage-xml` | Cobertura XML → `test/coverage.xml` (CI) |
 | `make lint` | arduino-lint + cppcheck (`make install-tools` first) |
 | `make list-boards` | List connected boards |
 | `ARDUINO_PORT=<port> make upload` | Upload to board |
@@ -46,7 +52,7 @@ ARDUINO_PORT=/dev/cu.usbmodem101 make monitor
 
 - `VideoGem/` — Core sketch: input, palette, draw, time/LFO, FX, info overlay, registry helpers; includes a zero-program `prog_registry.ino` stub until merge
 - `programs/default/` — Default `prog_*.ino` sources and the registry that registers them
-- `test/` — Host unit tests (`make test`)
+- `test/` — Host unit tests (`make test`); coverage via `make coverage` / `make coverage-html` (see table)
 - `docs/` — [Hardware](docs/hardware.md), [control model and platform contract](docs/VISUALIZER_PRODUCT_FRAMEWORK.md)
 
 ## Extending
