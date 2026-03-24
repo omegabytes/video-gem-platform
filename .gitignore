@@ -1,0 +1,15 @@
+# Build artifacts
+build/
+test/build/
+bin/
+
+# Coverage artifacts (gcov/gcovr)
+coverage.*
+*.gcda
+*.gcno
+*.gcov
+*.info
+*.lcov
+
+# macOS
+.DS_Store
