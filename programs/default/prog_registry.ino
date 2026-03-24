@@ -1,8 +1,8 @@
 // =====================================================================
 // PROGRAM REGISTRY — default platform programs (Video_Gem* by RMNA)
 //
-// Registers the default programs that ship with the platform.
-// A parent repo can overlay this with its own prog_registry.ino.
+// Registers the default programs that ship with this repository.
+// Replace or extend when merging a custom program set into the sketch.
 // =====================================================================
 
 ProgEntry g_programs[] = {

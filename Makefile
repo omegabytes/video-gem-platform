@@ -4,7 +4,7 @@
 #   make setup      # one-time: Arduino CLI, RP2040 core, libraries
 #   make compile    # build the sketch
 #   make test       # run unit tests
-#   make lint       # arduino-lint + cppcheck
+#   make lint       # arduino-lint + cppcheck (needs: make install-tools)
 #   make list-boards
 #   ARDUINO_PORT=/dev/cu.usbmodem101 make upload
 #   ARDUINO_PORT=/dev/cu.usbmodem101 make monitor

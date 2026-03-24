@@ -220,4 +220,4 @@ k8  k9 k10 k11 k12 k13 k14 k15
 
 ---
 
-*Last updated from Video Gem project codebase. Refer to [Adafruit Feather RP2040 DVI documentation](https://learn.adafruit.com/adafruit-feather-rp2040-dvi) for authoritative pin and electrical specs.*
+For authoritative pin and electrical specifications, use [Adafruit’s Feather RP2040 DVI guide](https://learn.adafruit.com/adafruit-feather-rp2040-dvi).

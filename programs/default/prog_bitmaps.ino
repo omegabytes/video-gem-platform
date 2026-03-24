@@ -1,14 +1,12 @@
 // =====================================================================
 // PROGRAM: BITMAPS (Video_Gem_Bitmaps by RMNA)
 //
-// Port of the legacy Video_Gem_Bitmaps sketch into the Video Gem
-// multi-program interface. Uses pots[4..7] for per-preset params.
+// Bitmap and text modes; per-preset parameters use pots p4–p7.
 // =====================================================================
 
 #include "bitmaps.h"
 
-// Local pot mapping: legacy used pots[0..3]; in Video Gem we reserve
-// pots[0..3] for global palette/speed/trail unless a program owns globals.
+// Local indices 0..3 map to p4..p7 (p0–p3 are globals unless PROG_FLAG_OWNS_GLOBALS).
 static inline int bm_pot(int localIdx, int lo, int hi) {
   return potMap(4 + localIdx, lo, hi);
 }
@@ -208,7 +206,7 @@ static void bm_bitmapOrbit() {
 const char* prog_bitmaps_name() { return "BITMAPS"; }
 
 const char* prog_bitmaps_character() {
-  return "Bitmaps & text — Video_Gem_Bitmaps by RMNA (legacy), adapted for Video Gem";
+  return "Bitmaps & text — Video_Gem_Bitmaps by RMNA";
 }
 
 static const char* const bm_presetNames[] = {

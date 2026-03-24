@@ -1,8 +1,8 @@
 // =====================================================================
 // PROGRAM REGISTRY — platform stub (0 programs)
 //
-// The merge step overlays default programs (programs/default/) and a
-// parent repo can overlay its own prog_registry.ino on top of that.
+// `make compile` merges in programs/default/; you can replace this file
+// with a larger registry when merging additional program sources.
 // =====================================================================
 
 ProgEntry g_programs[1] = {{0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0}};

@@ -18,10 +18,10 @@
 //
 // Control model:
 //   k0–k11            preset select (0–11, or 12–23 with Shift)
-//   k12               modifier A (program-defined). Ctrl+k12 = FX mode toggle
-//   k13               Info key — hold=full overlay, double-tap=toggle hints
-//   k14               Control (Ctrl+Shift+k0..k11 = program, Ctrl+k12 = FX mode)
-//   k15               Shift (hold + k0–k11 = presets 12–23)
+//   k12               modifier A (program-defined); with Control held: FX mode toggle
+//   k13               Info — hold=full overlay, double-tap=toggle hints
+//   k14               Control — with Shift + k0..k11: program switch
+//   k15               Shift — with k0–k11: presets 12–23
 //   p0–p3             global: palette, speed, trail, intensity
 //   p4–p15            per-preset (program-defined)
 // =====================================================================

@@ -2,8 +2,8 @@
 // CORE: Program registry — lookup, macro, program count
 //
 // Infrastructure for the table-driven program dispatch. The actual
-// g_programs[] array is defined in prog_registry.ino (stub, default,
-// or private overlay depending on the build).
+// g_programs[] array is defined in prog_registry.ino (stub in VideoGem/,
+// replaced when programs from programs/default/ or another tree are merged in).
 // =====================================================================
 
 #define PROG_ENTRY(slot, prefix) \
