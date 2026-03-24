@@ -24,10 +24,14 @@ make setup      # one-time: Arduino CLI, RP2040 core, libraries, gcovr (for cove
 make compile    # build the sketch
 make test       # run unit tests
 make coverage   # line coverage for VideoGem/ (after tests; needs gcovr)
-make list-boards
-ARDUINO_PORT=/dev/cu.usbmodem101 make upload
-ARDUINO_PORT=/dev/cu.usbmodem101 make monitor
+make set-board  # choose USB serial port → saves gitignored local.mk
+make upload
+make monitor
+make set-video  # macOS: choose capture card index → local.mk
+make preview
 ```
+
+`local.mk` stores `ARDUINO_PORT` and `VIDEO_DEVICE` so you do not pass them every time. Override for one command with `make upload ARDUINO_PORT=/dev/other`.
 
 ## Make Targets
 
@@ -42,11 +46,13 @@ ARDUINO_PORT=/dev/cu.usbmodem101 make monitor
 | `make coverage-html-all` | HTML including test sources → `test/coverage-all.html` |
 | `make coverage-xml` | Cobertura XML → `test/coverage.xml` (CI) |
 | `make lint` | arduino-lint + cppcheck (`make install-tools` first) |
-| `make list-boards` | List connected boards |
-| `ARDUINO_PORT=<port> make upload` | Upload to board |
-| `ARDUINO_PORT=<port> make monitor` | Serial monitor (115200 baud) |
-| `make list-video-devices` | List capture devices (macOS) |
-| `VIDEO_DEVICE=0 make preview` | Preview output via capture card |
+| `make list-boards` | List connected boards (same info `set-board` uses) |
+| `make set-board` | Interactive serial port → writes `local.mk` (default `/dev/cu.usbmodem101` on macOS when plausible) |
+| `make upload` | Upload (needs `ARDUINO_PORT` in env, `local.mk`, or `make upload ARDUINO_PORT=…`) |
+| `make monitor` | Serial monitor at 115200 baud |
+| `make list-video-devices` | List capture devices (macOS / ffmpeg) |
+| `make set-video` | **macOS:** interactive capture device → `local.mk` |
+| `make preview` | Live preview via ffmpeg/ffplay (`VIDEO_DEVICE` in `local.mk` or env) |
 
 ## Contents
 

@@ -11,5 +11,8 @@ coverage.*
 *.info
 *.lcov
 
+# Local device ports (make set-board / make set-video)
+local.mk
+
 # macOS
 .DS_Store

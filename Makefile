@@ -8,8 +8,10 @@
 #   make coverage-html   # HTML report → test/coverage.html
 #   make lint       # arduino-lint + cppcheck (needs: make install-tools)
 #   make list-boards
-#   ARDUINO_PORT=/dev/cu.usbmodem101 make upload
-#   ARDUINO_PORT=/dev/cu.usbmodem101 make monitor
+#   make set-board     # pick serial port → writes gitignored local.mk
+#   make upload / make monitor
+#   make set-video     # pick capture device (macOS preview) → local.mk
+#   make preview
 #
 
 BINDIR      := $(CURDIR)/bin
@@ -19,10 +21,13 @@ DEFAULT_PROGS := $(CURDIR)/programs/default
 FQBN        := rp2040:rp2040:adafruit_feather_dvi
 RP2040_URL  := https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
+# Optional: ARDUINO_PORT / VIDEO_DEVICE (make set-board / make set-video)
+-include local.mk
+
 .PHONY: setup install-arduino-cli setup-arduino install-gcovr merge compile test \
 	coverage coverage-all coverage-html coverage-html-all coverage-xml
-.PHONY: upload list-boards monitor
-.PHONY: list-video-devices preview
+.PHONY: upload list-boards monitor set-board
+.PHONY: list-video-devices preview set-video
 .PHONY: install-tools arduino-lint cppcheck lint
 
 # ─── Merge VideoGem + default programs ─────────────────────────────────
@@ -84,33 +89,39 @@ coverage-xml:
 
 # ─── Upload & monitor ───────────────────────────────────────────────────
 upload:
-	@if [ -z "$$ARDUINO_PORT" ]; then \
-		echo "Set ARDUINO_PORT. Run: make list-boards"; \
+	@if [ -z "$(ARDUINO_PORT)" ]; then \
+		echo "No serial port configured. Run: make set-board"; \
 		arduino-cli board list; \
 		exit 1; \
 	fi
-	arduino-cli upload -b $(FQBN) -p $$ARDUINO_PORT $(SKETCH_DIR)
+	arduino-cli upload -b $(FQBN) -p '$(ARDUINO_PORT)' $(SKETCH_DIR)
 
 list-boards:
 	arduino-cli board list
 
+set-board:
+	@bash "$(CURDIR)/scripts/set-board.sh"
+
 monitor:
-	@if [ -z "$$ARDUINO_PORT" ]; then \
-		echo "Set ARDUINO_PORT. Run: make list-boards"; \
+	@if [ -z "$(ARDUINO_PORT)" ]; then \
+		echo "No serial port configured. Run: make set-board"; \
 		exit 1; \
 	fi
-	arduino-cli monitor -p $$ARDUINO_PORT -c baudrate=115200
+	arduino-cli monitor -p '$(ARDUINO_PORT)' -c baudrate=115200
 
 # ─── Video preview (macOS, optional) ────────────────────────────────────
 list-video-devices:
 	@ffmpeg -hide_banner -f avfoundation -list_devices true -i "" 2>&1 || true
 
+set-video:
+	@bash "$(CURDIR)/scripts/set-video.sh"
+
 preview:
-	@if [ -z "$$VIDEO_DEVICE" ]; then \
-		echo "Set VIDEO_DEVICE. Run: make list-video-devices"; \
+	@if [ -z "$(VIDEO_DEVICE)" ]; then \
+		echo "No capture device configured. Run: make set-video"; \
 		exit 1; \
 	fi
-	ffplay -hide_banner -f avfoundation -framerate 60 -video_size 640x480 -i "$$VIDEO_DEVICE:none"
+	ffplay -hide_banner -f avfoundation -framerate 60 -video_size 640x480 -i '$(VIDEO_DEVICE):none'
 
 # ─── Linting ────────────────────────────────────────────────────────────
 install-tools:
