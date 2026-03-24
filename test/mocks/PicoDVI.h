@@ -2,6 +2,7 @@
 #define PICODVI_H_MOCK
 
 #include "Arduino.h"
+#include <cstdio>
 
 #define DVI_RES_320x240p60 0
 
@@ -50,7 +51,11 @@ public:
   void fillCircle(int, int, int, uint8_t)          {}
   void fillEllipse(int, int, int, int, uint8_t)   {}
   void drawRect(int, int, int, int, uint8_t)       {}
-  void fillRect(int, int, int, int, uint8_t)  {}
+  void fillRect(int x, int y, int w, int h, uint8_t c) {
+    for (int j = 0; j < h; j++)
+      for (int i = 0; i < w; i++)
+        drawPixel(x + i, y + j, c);
+  }
   void drawFastHLine(int x, int y, int w, uint8_t c) {
     for (int i = 0; i < w && x + i < 320; i++)
       drawPixel(x + i, y, c);
@@ -62,12 +67,37 @@ public:
   void drawCircleHelper(int, int, int, uint8_t, uint8_t) {}
   void drawTriangle(int, int, int, int, int, int, uint8_t) {}
   void fillTriangle(int, int, int, int, int, int, uint8_t) {}
-  void setCursor(int, int) {}
-  void setTextColor(uint8_t) {}
-  void setTextSize(int) {}
-  void print(const char*) {}
-  void print(int) {}
-  void print(char) {}
+  void setCursor(int x, int y) {
+    _cx = x;
+    _cy = y;
+  }
+  void setTextColor(uint8_t c) { _fgColor = c; }
+  void setTextSize(int s) { _textSize = s > 0 ? s : 1; }
+
+  void print(char ch) {
+    int charW = 6 * _textSize;
+    int charH = 8 * _textSize;
+    if (ch == '\0') return;
+    if (ch == ' ') {
+      _cx += charW;
+      return;
+    }
+    for (int dy = 0; dy < charH; dy++)
+      for (int dx = 0; dx < charW; dx++)
+        drawPixel(_cx + dx, _cy + dy, _fgColor);
+    _cx += charW;
+  }
+
+  void print(const char* s) {
+    if (!s) return;
+    while (*s) print(static_cast<char>(*s++));
+  }
+
+  void print(int v) {
+    char buf[16];
+    std::snprintf(buf, sizeof(buf), "%d", v);
+    print(buf);
+  }
 
   // --- Test helpers --------------------------------------------------------
   int  lineCount()  const { return _lineCnt; }
@@ -82,6 +112,10 @@ private:
   uint8_t _pal[256][3] = {};
   int _lineCnt = 0;
   int _circleCnt = 0;
+  int _cx = 0;
+  int _cy = 0;
+  int _textSize = 1;
+  uint8_t _fgColor = 255;
 };
 
 #endif
