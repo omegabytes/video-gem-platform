@@ -36,6 +36,9 @@ merge:
 	@rm -rf $(SKETCH_DIR)/*
 	cp -r $(VIDEOGEM)/* $(SKETCH_DIR)/
 	cp $(DEFAULT_PROGS)/*.ino $(SKETCH_DIR)/
+	@for f in $(DEFAULT_PROGS)/*.h; do \
+		[ -f "$$f" ] && cp "$$f" $(SKETCH_DIR)/; \
+	done
 	@echo "Merged sketch → $(SKETCH_DIR)"
 
 # ─── One-time setup ─────────────────────────────────────────────────────

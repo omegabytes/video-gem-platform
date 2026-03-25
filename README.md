@@ -9,7 +9,7 @@ The repo is the **platform core**—input, palette, drawing primitives, global F
 - **Hardware** — Adafruit Feather RP2040 DVI and related design by [Adafruit](https://www.adafruit.com/).
 - **Default programs** (Video_Gem_Basic_Shapes, Video_Gem_Color, Video_Gem_Inputs, Video_Gem_Symmetry) — Original programs by **Ramona Sharples (RMNA)** (https://ramona.diy/) for the Gray Area "[Programming Lo-fi Hardware Video Synthesizers](https://grayarea.org/course/programming-lo-fi-hardware-video-synthesizers/)" workshop, adapted from Adafruit tutorials.
 
-Ships with **default programs** in `programs/default/` (Basic Shapes, Symmetry, Color Lab, Inputs, Bitmaps, FX demo, and related assets). `make compile` merges `VideoGem/` with those files into `build/VideoGem/` before building.
+Ships with **default programs** in `programs/default/` (Basic Shapes, Symmetry, Color Lab, Inputs, Bitmaps, FX demo, and related assets). `make compile` merges `VideoGem/` with `programs/default/*.ino` and any `programs/default/*.h` (e.g. `bitmaps.h`) into `build/VideoGem/` before building.
 
 ## Requirements
 
@@ -57,7 +57,7 @@ make preview
 ## Contents
 
 - `VideoGem/` — Core sketch: input, palette, draw, time/LFO, FX, info overlay, registry helpers; includes a zero-program `prog_registry.ino` stub until merge
-- `programs/default/` — Default `prog_*.ino` sources and the registry that registers them
+- `programs/default/` — Default `prog_*.ino` sources, headers they include (e.g. `bitmaps.h`), and the registry
 - `test/` — Host unit tests (`make test`); coverage via `make coverage` / `make coverage-html` (see table)
 - `docs/` — [Hardware](docs/hardware.md), [control model and platform contract](docs/VISUALIZER_PRODUCT_FRAMEWORK.md)
 
