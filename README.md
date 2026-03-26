@@ -7,6 +7,7 @@ The repo is the **platform core**—input, palette, drawing primitives, global F
 ## Attribution
 
 - **Hardware** — Adafruit Feather RP2040 DVI and related design by [Adafruit](https://www.adafruit.com/).
+- **Video Gem (original project)** — Created by **Ramona Sharples (RMNA)**: [`https://github.com/ramonaisonline/video-gem`](https://github.com/ramonaisonline/video-gem)
 - **Default programs** (Video_Gem_Basic_Shapes, Video_Gem_Color, Video_Gem_Inputs, Video_Gem_Symmetry) — Original programs by **Ramona Sharples (RMNA)** (https://ramona.diy/) for the Gray Area "[Programming Lo-fi Hardware Video Synthesizers](https://grayarea.org/course/programming-lo-fi-hardware-video-synthesizers/)" workshop, adapted from Adafruit tutorials.
 
 Ships with **default programs** in `programs/default/` (Basic Shapes, Symmetry, Color Lab, Inputs, Bitmaps, FX demo, and related assets). `make compile` merges `VideoGem/` with `programs/default/*.ino` and any `programs/default/*.h` (e.g. `bitmaps.h`) into `build/VideoGem/` before building.
