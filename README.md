@@ -59,7 +59,7 @@ make preview
 - `VideoGem/` — Core sketch: input, palette, draw, time/LFO, FX, info overlay, registry helpers; includes a zero-program `prog_registry.ino` stub until merge
 - `programs/default/` — Default `prog_*.ino` sources, headers they include (e.g. `bitmaps.h`), and the registry
 - `test/` — Host unit tests (`make test`); coverage via `make coverage` / `make coverage-html` (see table)
-- `docs/` — [Hardware](docs/hardware.md), [control model and platform contract](docs/VISUALIZER_PRODUCT_FRAMEWORK.md)
+- `docs/` — [Hardware](docs/hardware.md), [platform contract](docs/VISUALIZER_PRODUCT_FRAMEWORK.md), [interactive “how it works” course](docs/Video-Gem-How-It-Works.html) (open in a browser)
 
 ## Extending
 
