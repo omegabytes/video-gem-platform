@@ -11,6 +11,10 @@ The repo is the **platform core**—input, palette, drawing primitives, global F
 
 Ships with **default programs** in `programs/default/` (Basic Shapes, Symmetry, Color Lab, Inputs, Bitmaps, FX demo, and related assets). `make compile` merges `VideoGem/` with `programs/default/*.ino` and any `programs/default/*.h` (e.g. `bitmaps.h`) into `build/VideoGem/` before building.
 
+## License
+
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
+
 ## Requirements
 
 - **macOS** — `make setup` uses Homebrew for Arduino CLI and tools (simplest path).
@@ -59,7 +63,7 @@ make preview
 - `VideoGem/` — Core sketch: input, palette, draw, time/LFO, FX, info overlay, registry helpers; includes a zero-program `prog_registry.ino` stub until merge
 - `programs/default/` — Default `prog_*.ino` sources, headers they include (e.g. `bitmaps.h`), and the registry
 - `test/` — Host unit tests (`make test`); coverage via `make coverage` / `make coverage-html` (see table)
-- `docs/` — [Hardware](docs/hardware.md), [platform contract](docs/VISUALIZER_PRODUCT_FRAMEWORK.md), [interactive “how it works” course](docs/Video-Gem-How-It-Works.html) (open in a browser)
+- `docs/` — [Hardware](docs/hardware.md), [platform contract](docs/VISUALIZER_PRODUCT_FRAMEWORK.md), interactive “how it works” course: published at [`https://video-gem-platform.netlify.app/`](https://video-gem-platform.netlify.app/) (source: `docs/index.html`)
 
 ## Extending
 
