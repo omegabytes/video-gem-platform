@@ -136,7 +136,7 @@ These use `getPixel()` / `drawPixel()` to read and transform existing pixel valu
 
 Post-draw framebuffer FX are powerful because they work with any program's output. A simple generative pattern becomes a complex kaleidoscopic composition.
 
-**Note on echo:** Requires a ~77KB shadow buffer (320×240×1 byte) to store the previous frame for blending. With 264KB total SRAM and PicoDVI's double-buffer already consuming ~154KB, this is tight but feasible. The blend ratio is a natural parameter for pot control in FX mode.
+**Note on echo:** Uses a **subsampled** shadow buffer (~19KB, 160×120 cells covering 2×2 pixel blocks) so the full private sketch (default + custom programs) still leaves enough SRAM for PicoDVI’s double framebuffer (~154KB). A full 320×240 history (~77KB) made `display.begin()` fail once all programs were linked. The blend ratio remains a natural FX-mode pot target.
 
 #### Palette FX (modify the color lookup table)
 

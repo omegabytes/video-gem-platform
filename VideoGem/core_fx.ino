@@ -118,25 +118,40 @@ static void fxMirrorQuad() {
 }
 
 // Echo: blend current frame toward previous frame.
-// Shadow buffer is expensive (~77KB) so it is only used when echo is active.
-static uint8_t fxEchoBuf[W * H];
+// Full 320×240 shadow (~77KB) plus private program .bss exceeds RP2040 SRAM once
+// PicoDVI allocates double buffers — display.begin() fails. Use 2×2 subsampled
+// history (~19KB): same temporal smear, slightly blocky (acceptable tradeoff).
+#define FX_ECHO_BW (W / 2)
+#define FX_ECHO_BH (H / 2)
+static uint8_t fxEchoBuf[FX_ECHO_BW * FX_ECHO_BH];
 static bool fxEchoReady = false;
 
 static void fxEcho() {
   uint8_t* buf = display.getBuffer();
-  int total = W * H;
 
   if (!fxEchoReady) {
-    memcpy(fxEchoBuf, buf, total);
+    for (int by = 0; by < FX_ECHO_BH; by++) {
+      int row = (by * 2) * W;
+      for (int bx = 0; bx < FX_ECHO_BW; bx++) {
+        fxEchoBuf[by * FX_ECHO_BW + bx] = buf[row + bx * 2];
+      }
+    }
     fxEchoReady = true;
     return;
   }
 
-  // Blend: output = (current + prev) / 2, then store current as prev
-  for (int i = 0; i < total; i++) {
-    uint8_t blended = ((uint16_t)buf[i] + (uint16_t)fxEchoBuf[i]) >> 1;
-    fxEchoBuf[i] = buf[i];
-    buf[i] = blended;
+  for (int by = 0; by < FX_ECHO_BH; by++) {
+    int row = (by * 2) * W;
+    for (int bx = 0; bx < FX_ECHO_BW; bx++) {
+      int i = row + bx * 2;
+      uint8_t prev = fxEchoBuf[by * FX_ECHO_BW + bx];
+      uint8_t blended = ((uint16_t)buf[i] + (uint16_t)prev) >> 1;
+      fxEchoBuf[by * FX_ECHO_BW + bx] = buf[i];
+      buf[i]         = blended;
+      buf[i + 1]     = blended;
+      buf[i + W]     = blended;
+      buf[i + W + 1] = blended;
+    }
   }
 }
 

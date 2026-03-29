@@ -220,4 +220,18 @@ k8  k9 k10 k11 k12 k13 k14 k15
 
 ---
 
+## Troubleshooting: DVI does not start (`display.begin()` fails)
+
+If USB serial shows **“DVI init failure loop”** and the status LED blinks about **twice per second**, the firmware is stuck because **PicoDVI never initialized**. That is almost always **hardware or board selection**, not the sketch registry.
+
+1. **Board identity** — Firmware is built for **Adafruit Feather RP2040 DVI** (`adafruit_feather_dvi`). The plain **Feather RP2040** (no DVI socket) uses different pins; `display.begin()` will **fail** on that board. Confirm the silkscreen / product page matches the DVI variant.
+
+2. **HDMI / DVI** — Use the **DVI add-on for this Feather** (or the correct Adafruit DVI wing), cable fully seated, then **USB power**. Try a **direct** USB port (not a marginal hub). Some monitors need **HDMI first**, then power; try both orders.
+
+3. **Libraries / core** — Use **Earle Philhower’s RP2040 core** and **“PicoDVI - Adafruit Fork”** as in the project `Makefile` (`make setup`). Mismatched library vs core versions can break init.
+
+4. **Serial capture** — Open the monitor **before** reset (`make monitor`, then tap **RESET**) so you do not miss the first lines (`display.begin() FAILED`, etc.).
+
+5. **Static RAM vs. private merge** — The private repo links **extra** `prog_*.ino` files with large `.bss` (simulation buffers, particles, etc.). If **global variables** reported by `arduino-cli compile` are near **50%** of “dynamic memory” (~131KB+) while the platform-only build is ~35% (~94KB), PicoDVI may not get enough SRAM for its framebuffers and **`display.begin()` fails** even on correct hardware. The platform mitigates this (e.g. subsampled echo FX buffer); if you add more huge static arrays, trim counts or share storage.
+
 For authoritative pin and electrical specifications, use [Adafruit’s Feather RP2040 DVI guide](https://learn.adafruit.com/adafruit-feather-rp2040-dvi).
